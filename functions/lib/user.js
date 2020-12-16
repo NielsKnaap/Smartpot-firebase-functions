@@ -8,20 +8,21 @@ const FIREBASE_AUTH_USER = functions.auth.user();
 const FIRESTORE = admin.firestore();
 const USERS_COLLECTION = 'users';
 exports.functionAddUser = functions.https.onRequest((request, response) => {
-    const email = request.body.email;
-    const password = request.body.password;
-    admin.auth().createUser({
-        email: email,
-        password: password
-    })
-        .then(function (userRecord) {
-        console.log('Successfully created new user:', userRecord.uid);
-        response.send('Successfully created new user: ' + userRecord.uid);
-    })
-        .catch(function (error) {
-        console.log('Error creating new user:', error);
-        response.send('Error creating new user: ' + error);
-    });
+    if ((request.body.email && request.body.password) != null) {
+        admin.auth().createUser({
+            email: request.body.email,
+            password: request.body.password
+        })
+            .then(function (userRecord) {
+            response.send('Successfully created new user: ' + userRecord.uid);
+        })
+            .catch(function (error) {
+            response.send('Error creating new user: ' + error);
+        });
+    }
+    else {
+        response.send('Given variables are null');
+    }
 });
 exports.triggerAddUser = FIREBASE_AUTH_USER.onCreate(user => {
     return FIRESTORE.collection('users').doc(user.uid).set({
@@ -31,12 +32,10 @@ exports.triggerAddUser = FIREBASE_AUTH_USER.onCreate(user => {
 });
 exports.functionDeleteUser = functions.https.onRequest((request, response) => {
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).delete()
-        .then(function (deletedUser) {
-        console.log('Successfully deleted user:', deletedUser);
-        response.send('Successfully deleted user: ' + deletedUser);
+        .then(function () {
+        response.send('Successfully deleted user');
     })
         .catch(function (error) {
-        console.log('Error deleting user:', error);
         response.send('Error deleting user: ' + error);
     });
 });
@@ -47,9 +46,8 @@ exports.triggerDeleteUser = FIREBASE_AUTH_USER.onDelete(user => {
 exports.functionEditUser = functions.https.onRequest((request, response) => {
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
         .update({ measureFrequency: request.body.measureFrequency })
-        .then(function (updatedUser) {
-        console.log('Successfully updated user:', updatedUser);
-        response.send('Successfully updated user: ' + updatedUser);
+        .then(function () {
+        response.send('Successfully updated user');
     })
         .catch(function (error) {
         console.log('Error updating user:', error);
