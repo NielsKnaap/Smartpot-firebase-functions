@@ -30,7 +30,7 @@ exports.triggerAddUser = FIREBASE_AUTH_USER.onCreate(user => {
     });
 });
 exports.functionDeleteUser = functions.https.onRequest((request, response) => {
-    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.user.userId).delete()
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).delete()
         .then(function (deletedUser) {
         console.log('Successfully deleted user:', deletedUser);
         response.send('Successfully deleted user: ' + deletedUser);
@@ -45,7 +45,7 @@ exports.triggerDeleteUser = FIREBASE_AUTH_USER.onDelete(user => {
     return doc.delete();
 });
 exports.functionEditUser = functions.https.onRequest((request, response) => {
-    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.user.userId)
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
         .update({ measureFrequency: request.body.measureFrequency })
         .then(function (updatedUser) {
         console.log('Successfully updated user:', updatedUser);
