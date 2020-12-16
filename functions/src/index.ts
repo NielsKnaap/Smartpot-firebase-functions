@@ -1,5 +1,9 @@
 import * as user from './user';
-// import * as plant from './plant';
-// import * as measurement from './measurement';
 
-export const newUserSignup2 = user.newUserSignup2;
+export const functionAddUser = user.functionAddUser;
+export const triggerAddUser = user.triggerAddUser;
+
+export const functionDeleteUser = user.functionDeleteUser;
+export const triggerDeleteUser = user.triggerDeleteUser;
+
+export const functionEditUser = user.functionEditUser;
