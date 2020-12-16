@@ -15,7 +15,7 @@ export const functionAddMeasurement = functions.https.onRequest( (request, respo
             temperature: request.body.temperature,
             lightIntensity: request.body.lightIntensity,
             soilMoisture: request.body.soilMoisture,
-            timeStamp: new Date().toLocaleString()
+            timeStamp: new Date().toLocaleString(),
     })
         .then( function (measurement) {
         console.log('Successfully added measurement:', measurement);
