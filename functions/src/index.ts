@@ -10,3 +10,5 @@ export const triggerDeleteUser = user.triggerDeleteUser;
 export const functionEditUser = user.functionEditUser;
 
 export const functionAddPlant = plant.functionAddPlant;
+export const functionEditPlant = plant.functionEditPlant;
+export const functionDeletePlant = plant.functionDeletePlant;
