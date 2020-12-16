@@ -1,9 +1,5 @@
-import * as functions from 'firebase-functions';
+import * as user from './user';
+// import * as plant from './plant';
+// import * as measurement from './measurement';
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export const newUserSignup2 = user.newUserSignup2;
