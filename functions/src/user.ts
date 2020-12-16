@@ -50,7 +50,7 @@ export const triggerDeleteUser = FIREBASE_AUTH_USER.onDelete( user => {
 });
 
 export const functionEditUser = functions.https.onRequest( (request, response) => {
-    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.user.userId)
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
         .update(
             {measureFrequency: request.body.measureFrequency}
         )
