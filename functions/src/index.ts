@@ -2,14 +2,12 @@ import * as user from './user';
 import * as plant from './plant';
 import * as measurement from './measurement';
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
 import * as robot from "./robot";
 
 export const USERS_COLLECTION = 'users';
 export const PLANTS_COLLECTION = 'plants';
 export const MEASUREMENTS_COLLECTION = 'measurements';
 export const FIRESTORE = admin.firestore();
-export const FIREBASE_AUTH_USER = functions.auth.user();
 
 export const functionAddUser = user.functionAddUser;
 export const triggerAddUser = user.triggerAddUser;

@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {FIREBASE_AUTH_USER, FIRESTORE, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
+import {FIRESTORE, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
 
 admin.initializeApp();
+export const FIREBASE_AUTH_USER = functions.auth.user();
 
 export const functionAddUser = functions.https.onRequest( (request, response) => {
 
@@ -63,7 +64,8 @@ export const functionGetUserIdByPlantId = functions.https.onRequest((request, re
     FIRESTORE.collectionGroup(PLANTS_COLLECTION).where('plantId', '==', request.body.plantId).get()
         .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
-                response.send(doc.id);
+                console.log(doc.ref.parent.parent);
+                response.send(doc.ref.parent.parent?.id);
             });
         });
 });

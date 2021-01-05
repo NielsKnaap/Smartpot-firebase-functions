@@ -34,5 +34,5 @@ export const functionMoveRobot = functions.https.onRequest((request, response ) 
 function calculateMeasurement(minLi: number, li: number, maxLi: number,
                               minSm: number, sm: number, maxSm: number,
                               minT: number, t: number, maxT: number) {
-    return !((li > minLi && li < maxLi) || (sm > minSm) && (sm < maxSm) || (t > minT) && (t < maxT));
+    return ((li < minLi || li > maxLi) || (sm < minSm || sm > maxSm) || (t < minT || t > maxT));
 }
