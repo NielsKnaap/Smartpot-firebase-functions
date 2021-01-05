@@ -1,12 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import {FIREBASE_AUTH_USER, FIRESTORE, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
 
 admin.initializeApp();
-
-const FIREBASE_AUTH_USER = functions.auth.user();
-const FIRESTORE = admin.firestore();
-const USERS_COLLECTION = 'users';
-const PLANTS_COLLECTION = 'plants';
 
 export const functionAddUser = functions.https.onRequest( (request, response) => {
 
