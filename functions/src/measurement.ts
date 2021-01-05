@@ -6,16 +6,6 @@ const USERS_COLLECTION = 'users';
 const PLANTS_COLLECTION = 'plants';
 const MEASUREMENTS_COLLECTION = 'measurements';
 
-export const functionGetUserIdByPlantId = functions.https.onRequest((request, response ) => {
-    FIRESTORE.collectionGroup(PLANTS_COLLECTION).where('plantId', '==', request.body.plantId).get()
-        .then(function (test) {
-            response.send(test.docs);
-        })
-        .catch(function (error) {
-            response.send(error);
-        });
-})
-
 export const functionAddMeasurement = functions.https.onRequest( (request, response) => {
     FIRESTORE
         .collection(USERS_COLLECTION).doc(request.body.userId)
