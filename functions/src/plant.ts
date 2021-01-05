@@ -7,6 +7,7 @@ const PLANTS_COLLECTION = 'plants';
 export const functionAddPlant = functions.https.onRequest((request, response) => {
     admin.firestore().collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).add({
         active: request.body.active,
+        plantId: request.body.plantId,
         lightIntensity: request.body.lightIntensity,
         soilMoisture: request.body.soilMoisture,
         temperature: request.body.temperature,
