@@ -13,3 +13,4 @@ export const functionEditPlant = plant.functionEditPlant;
 export const functionDeletePlant = plant.functionDeletePlant;
 
 export const functionAddMeasurement = measurement.functionAddMeasurement;
+export const functionGetMeasurement = measurement.functionGetMeasurement;

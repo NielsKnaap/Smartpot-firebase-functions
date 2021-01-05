@@ -26,3 +26,14 @@ export const functionAddMeasurement = functions.https.onRequest( (request, respo
             response.send('Error adding measurement: ' + error);
         });
 });
+
+export const functionGetMeasurement = functions.https.onRequest((request, response) => {
+    admin.firestore().collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
+        .collection(MEASUREMENTS_COLLECTION).get()
+        .then(snapshot => {
+            response.json(snapshot.docs.map(doc => doc.data()));
+        })
+        .catch(function (error) {
+            response.status(500).send('Error receiving measurement data');
+        });
+});
