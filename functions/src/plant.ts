@@ -1,16 +1,18 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
-
-const USERS_COLLECTION = 'users';
-const PLANTS_COLLECTION = 'plants';
+import {FIRESTORE, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
 
 export const functionAddPlant = functions.https.onRequest((request, response) => {
-    admin.firestore().collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).add({
-        active: request.body.active,
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId).set({
         plantId: request.body.plantId,
-        lightIntensity: request.body.lightIntensity,
-        soilMoisture: request.body.soilMoisture,
-        temperature: request.body.temperature,
+
+        minLightIntensity: request.body.minLightIntensity,
+        maxLightIntensity: request.body.maxLightIntensity,
+
+        minSoilMoisture: request.body.minSoilMoisture,
+        maxSoilMoisture: request.body.maxSoilMoisture,
+
+        minTemperature: request.body.minTemperature,
+        maxTemperature: request.body.maxTemperature
     }).then(function (updatedPlant) {
         response.send('Successfully added plant');
     }).catch(function (error) {
@@ -19,12 +21,16 @@ export const functionAddPlant = functions.https.onRequest((request, response) =>
 });
 
 export const functionEditPlant = functions.https.onRequest((request, response) => {
-    admin.firestore().collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.id)
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
         .update({
-            active: request.body.active,
-            lightIntensity: request.body.lightIntensity,
-            soilMoisture: request.body.soilMoisture,
-            temperature: request.body.temperature,
+            minLightIntensity: request.body.minLightIntensity,
+            maxLightIntensity: request.body.maxLightIntensity,
+
+            minSoilMoisture: request.body.minSoilMoisture,
+            maxSoilMoisture: request.body.maxSoilMoisture,
+
+            minTemperature: request.body.minTemperature,
+            maxTemperature: request.body.maxTemperature
         })
         .then(function () {
             response.send('Successfully updated plant');
@@ -35,11 +41,22 @@ export const functionEditPlant = functions.https.onRequest((request, response) =
 });
 
 export const functionDeletePlant = functions.https.onRequest((request, response) => {
-    admin.firestore().collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.id).delete()
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.id).delete()
         .then(function () {
             response.send('Successfully deleted plant');
         })
         .catch(function (error) {
             response.send('Error deleting plant: ' + error);
+        });
+});
+
+export const functionGetPlant = functions.https.onRequest((request, response ) => {
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
+        .collection(PLANTS_COLLECTION).doc(request.body.plantId).get()
+        .then(function(doc) {
+            response.send(doc.data());
+        })
+        .catch(function(error) {
+            response.send("Error getting document: " + error);
         });
 });
