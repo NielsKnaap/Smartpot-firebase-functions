@@ -17,6 +17,7 @@ export const functionEditUser = user.functionEditUser;
 export const functionGetUserIdByPlantId = user.functionGetUserIdByPlantId;
 
 export const functionAddPlant = plant.functionAddPlant;
+export const callableAddPlant = plant.callableAddPlant;
 export const functionEditPlant = plant.functionEditPlant;
 export const functionDeletePlant = plant.functionDeletePlant;
 export const functionGetPlant = plant.functionGetPlant;
