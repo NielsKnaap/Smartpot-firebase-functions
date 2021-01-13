@@ -21,6 +21,8 @@ export const callableAddPlant = plant.callableAddPlant;
 export const functionEditPlant = plant.functionEditPlant;
 export const functionDeletePlant = plant.functionDeletePlant;
 export const functionGetPlant = plant.functionGetPlant;
+export const callableGetPlants = plant.callableGetPlants;
+export const functionGetPlants = plant.functionGetPlants;
 
 export const functionAddMeasurement = measurement.functionAddMeasurement;
 export const functionGetMeasurement = measurement.functionGetMeasurement;
