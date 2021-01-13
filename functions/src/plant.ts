@@ -83,3 +83,26 @@ export const functionGetPlant = functions.https.onRequest((request, response ) =
             response.send("Error getting document: " + error);
         });
 });
+
+export const callableGetPlants = functions.https.onCall((data, context) => {
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).get()
+        .then(snapshot => {
+            let data = snapshot.docs.map(doc => doc.data());
+            return data;
+        })
+        .catch(function (error) {
+            return {
+                error: "Er ging iets mis met ophalen"
+            };
+        });
+})
+
+export const functionGetPlants = functions.https.onRequest((request, response) => {
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).get()
+        .then(snapshot => {
+            response.json( snapshot.docs.map(doc => doc.data()) );
+        })
+        .catch(function (error) {
+            response.status(500).send( 'Error receiving measurement data' );
+        });
+})
