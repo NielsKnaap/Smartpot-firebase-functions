@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import * as admin from "firebase-admin";
 import {FIRESTORE, MEASUREMENTS_COLLECTION, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
 
 export const functionAddMeasurement = functions.https.onRequest( (request, response) => {
@@ -10,7 +11,7 @@ export const functionAddMeasurement = functions.https.onRequest( (request, respo
             temperature: request.body.temperature,
             lightIntensity: request.body.lightIntensity,
             soilMoisture: request.body.soilMoisture,
-            timeStamp: new Date().toLocaleString(),
+            timeStamp: admin.firestore.Timestamp.fromDate(new Date()),
     })
         .then( function (measurement) {
         response.send('Successfully added measurement: ' + measurement);
