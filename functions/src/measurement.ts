@@ -33,9 +33,11 @@ export const functionGetMeasurement = functions.https.onRequest((request, respon
 });
 
 export const functionGetLastMeasurement = functions.https.onRequest((request, response) => {
+    var period = request.body.period ? request.body.period : 7;
+
     var date = new Date();
     date ;
-    date.setDate(date.getDate() - 7);
+    date.setDate(date.getDate() - period);
 
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
         .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
@@ -47,3 +49,20 @@ export const functionGetLastMeasurement = functions.https.onRequest((request, re
         });
 });
 
+export const callableGetLastMeasurement = functions.https.onCall((data, context) => {
+    var period = data.period ? data.period : 7;
+
+    var date = new Date();
+    date ;
+    date.setDate(date.getDate() - period);
+
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).get()
+        .then(snapshot => {
+            return snapshot.docs.map(doc => doc.data());
+        })
+        .catch(function (error) {
+            return {
+                error: "Er ging iets mis met ophalen"
+            };
+        });
+})
