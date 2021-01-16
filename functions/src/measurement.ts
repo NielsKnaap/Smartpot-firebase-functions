@@ -56,9 +56,12 @@ export const callableGetLastMeasurement = functions.https.onCall((data, context)
     date ;
     date.setDate(date.getDate() - period);
 
-    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).get()
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId)
+        .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
         .then(snapshot => {
-            return snapshot.docs.map(doc => doc.data());
+            var data = snapshot.docs.map(doc => doc.data());
+            console.log(data);
+            return data;
         })
         .catch(function (error) {
             return {
