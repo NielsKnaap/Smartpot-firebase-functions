@@ -69,3 +69,17 @@ export const functionGetUserIdByPlantId = functions.https.onRequest((request, re
             });
         });
 });
+
+export const addGoogleTokenToUser = functions.https.onCall( (data, context) => {
+    FIRESTORE.collection(USERS_COLLECTION).doc(data.userId)
+        .update(
+            {googleToken: data.googleToken}
+        )
+        .then( function () {
+            return 'Successfully updated user';
+        })
+        .catch(function (error) {
+            console.log('Error updating user:', error);
+            return 'Error updating user: ' + error;
+        });
+});

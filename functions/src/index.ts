@@ -14,6 +14,7 @@ export const triggerAddUser = user.triggerAddUser;
 export const functionDeleteUser = user.functionDeleteUser;
 export const triggerDeleteUser = user.triggerDeleteUser;
 export const functionEditUser = user.functionEditUser;
+export const addGoogleTokenToUser = user.addGoogleTokenToUser;
 export const functionGetUserIdByPlantId = user.functionGetUserIdByPlantId;
 
 export const functionAddPlant = plant.functionAddPlant;
@@ -28,5 +29,6 @@ export const functionAddMeasurement = measurement.functionAddMeasurement;
 export const functionGetMeasurement = measurement.functionGetMeasurement;
 export const functionGetLastMeasurement = measurement.functionGetLastMeasurement;
 export const callableGetLastMeasurement = measurement.callableGetLastMeasurement;
+export const sendNotificationToUser = measurement.sendNotificationToUser;
 
 export const functionMoveRobot = robot.functionMoveRobot;
