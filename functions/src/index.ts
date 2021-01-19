@@ -26,5 +26,7 @@ export const functionGetPlants = plant.functionGetPlants;
 
 export const functionAddMeasurement = measurement.functionAddMeasurement;
 export const functionGetMeasurement = measurement.functionGetMeasurement;
+export const functionGetLastMeasurement = measurement.functionGetLastMeasurement;
+export const callableGetLastMeasurement = measurement.callableGetLastMeasurement;
 
 export const functionMoveRobot = robot.functionMoveRobot;
