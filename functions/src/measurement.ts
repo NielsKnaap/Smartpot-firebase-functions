@@ -39,8 +39,15 @@ export const functionGetLastMeasurement = functions.https.onRequest((request, re
     date ;
     date.setDate(date.getDate() - period);
 
-    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
-        .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
+    if(request.body.limit){
+        var firestore = FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
+            .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').limit(request.body.limit).get();
+    } else {
+        var firestore = FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
+            .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
+    }
+
+    firestore
         .then(snapshot => {
             response.json(snapshot.docs.map(doc => doc.data()));
         })
@@ -56,8 +63,15 @@ export const callableGetLastMeasurement = functions.https.onCall((data, context)
     date ;
     date.setDate(date.getDate() - period);
 
-    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId)
-        .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
+    if(data.limit){
+        var firestore = FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId)
+            .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').limit(data.limit).get();
+    } else {
+        var firestore = FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId)
+            .collection(MEASUREMENTS_COLLECTION).where('timeStamp', '>', date).orderBy('timeStamp').get()
+    }
+
+    return firestore
         .then(snapshot => {
             var data = snapshot.docs.map(doc => doc.data());
             console.log(data);
