@@ -11,6 +11,7 @@ export const functionAddPlant = functions.https.onRequest((request, response) =>
         maxSoilMoisture: request.body.maxSoilMoisture,
         minTemperature: request.body.minTemperature,
         maxTemperature: request.body.maxTemperature,
+        measureFrequency: request.body.measureFrequency
     }
     addPlant(data).then(function (updatedPlant) {
         response.send( 'Successfully added plant' );
@@ -39,7 +40,9 @@ function addPlant( data:any ){
         maxSoilMoisture: data.maxSoilMoisture,
 
         minTemperature: data.minTemperature,
-        maxTemperature: data.maxTemperature
+        maxTemperature: data.maxTemperature,
+
+        measureFrequency: data.measureFrequency
     });
 }
 
@@ -53,7 +56,9 @@ export const functionEditPlant = functions.https.onRequest((request, response) =
             maxSoilMoisture: request.body.maxSoilMoisture,
 
             minTemperature: request.body.minTemperature,
-            maxTemperature: request.body.maxTemperature
+            maxTemperature: request.body.maxTemperature,
+
+            measureFrequency: request.body.measureFrequency
         })
         .then(function () {
             response.send('Successfully updated plant');
@@ -104,5 +109,16 @@ export const functionGetPlants = functions.https.onRequest((request, response) =
         })
         .catch(function (error) {
             response.status(500).send( 'Error receiving measurement data' );
+        });
+})
+
+export const functionGetMeasurementFrequency = functions.https.onRequest((request, response) => {
+    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
+        .collection(PLANTS_COLLECTION).doc(request.body.plantId).get()
+        .then(function(doc) {
+            response.send(doc.get("measureFrequency"));
+        })
+        .catch(function(error) {
+            response.send("Error getting measure frequency: " + error);
         });
 })
