@@ -116,7 +116,8 @@ export const functionGetMeasurementFrequency = functions.https.onRequest((reques
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
         .collection(PLANTS_COLLECTION).doc(request.body.plantId).get()
         .then(function(doc) {
-            response.send(doc.get("measureFrequency"));
+            const measureFrequency: number = doc.get('measureFrequency');
+            response.send({measureFrequency: measureFrequency});
         })
         .catch(function(error) {
             response.send("Error getting measure frequency: " + error);
