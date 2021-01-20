@@ -83,3 +83,62 @@ export const callableGetLastMeasurement = functions.https.onCall((data, context)
             };
         });
 })
+
+export const sendNotificationToUser = functions.firestore.document('users/{userId}/plants/{plantId}/measurements/{measurementId}')
+    .onCreate(async (snap, context) => {
+        const measurement = snap.data();
+        const userId = context.params.userId
+        const plantId = context.params.plantId
+        var deviceToken = null
+        console.log(userId)
+        console.log(measurement)
+
+        // const deviceTokens = admin.database()
+        //     .ref(`/users/${userId}/googleToken`).once('value');
+
+        const user = FIRESTORE.collection(USERS_COLLECTION).doc(userId);
+        const doc = await user.get();
+        if (doc.exists) {
+            const data = doc.data();
+            if(data){
+                deviceToken = data.googleToken;
+                console.log("Devicetoken:", deviceToken)
+            }
+        } else {
+            return;
+        }
+        const plant = await FIRESTORE.collection(USERS_COLLECTION).doc(userId)
+            .collection(PLANTS_COLLECTION).doc(plantId).get()
+
+        if(plant.exists){
+            const minSoilMoisture = plant.get('minSoilMoisture');
+            const maxSoilMoisture = plant.get('maxSoilMoisture');
+
+            if(measurement.soilMoisture < minSoilMoisture){
+                // Notification details.
+                const payload = {
+                    notification: {
+                        title: 'Help, ik sta droog!',
+                        body: `Mijn vocht peil is onder ${minSoilMoisture} geraakt, kan je me zo snel mogelijk water geven?.`,
+                        icon: 'https://nielsknaap.nl/watering.png'
+                    }
+                };
+                // Send notifications to token.
+                await admin.messaging().sendToDevice(deviceToken, payload);
+            }
+            if(measurement.soilMoisture > maxSoilMoisture){
+                // Notification details.
+                const payload = {
+                    notification: {
+                        title: 'Bedankt, dit is meer dan genoeg water.',
+                        body: 'Zo kan ik er weer een hele tijd tegenaan!',
+                        icon: 'https://nielsknaap.nl/watering.png'
+                    }
+                };
+                // Send notifications to token.
+                await admin.messaging().sendToDevice(deviceToken, payload);
+            }
+        }
+
+        return true;
+})
