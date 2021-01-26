@@ -18,7 +18,6 @@ export const functionAddPlant = functions.https.onRequest((request, response) =>
     }).catch(function (error) {
         response.send( 'Error while adding plant: ' + error );
     })
-
 });
 
 export const callableAddPlant = functions.https.onCall((data, context) => {
@@ -47,26 +46,48 @@ function addPlant( data:any ){
 }
 
 export const functionEditPlant = functions.https.onRequest((request, response) => {
-    FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.plantId)
-        .update({
-            minLightIntensity: request.body.minLightIntensity,
-            maxLightIntensity: request.body.maxLightIntensity,
+    var data = {
+        minLightIntensity: request.body.minLightIntensity,
+        maxLightIntensity: request.body.maxLightIntensity,
 
-            minSoilMoisture: request.body.minSoilMoisture,
-            maxSoilMoisture: request.body.maxSoilMoisture,
+        minSoilMoisture: request.body.minSoilMoisture,
+        maxSoilMoisture: request.body.maxSoilMoisture,
 
-            minTemperature: request.body.minTemperature,
-            maxTemperature: request.body.maxTemperature,
+        minTemperature: request.body.minTemperature,
+        maxTemperature: request.body.maxTemperature,
 
-            measureFrequency: request.body.measureFrequency
-        })
-        .then(function () {
-            response.send('Successfully updated plant');
-        })
-        .catch(function (error) {
-            response.send('Error while updating plant: ' + error);
-        });
+        measureFrequency: request.body.measureFrequency
+    }
+    editPlant(data).then(function (updatedPlant) {
+        response.send( 'Successfully updated plant' );
+    }).catch(function (error) {
+        response.send( 'Error while updating plant: ' + error );
+    })
 });
+
+function editPlant( data:any ){
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId).update({
+
+        minLightIntensity: data.minLightIntensity,
+        maxLightIntensity: data.maxLightIntensity,
+
+        minSoilMoisture: data.minSoilMoisture,
+        maxSoilMoisture: data.maxSoilMoisture,
+
+        minTemperature: data.minTemperature,
+        maxTemperature: data.maxTemperature,
+
+        measureFrequency: data.measureFrequency
+    });
+}
+
+export const callableEditPlant = functions.https.onCall((data, context) => {
+    editPlant(data).then(function (updatedPlant) {
+        return 'Successfully updated plant';
+    }).catch(function (error) {
+        return 'Error while updating plant: ' + error;
+    })
+})
 
 export const functionDeletePlant = functions.https.onRequest((request, response) => {
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.id).delete()
@@ -77,6 +98,18 @@ export const functionDeletePlant = functions.https.onRequest((request, response)
             response.send('Error deleting plant: ' + error);
         });
 });
+
+export const callableGetPlant = functions.https.onCall((data, context) => {
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId).get()
+        .then(doc => {
+            return doc.data();
+        })
+        .catch(function (error) {
+            return {
+                error: "Het ophalen van de plant is mislukt"
+            };
+        });
+})
 
 export const functionGetPlant = functions.https.onRequest((request, response ) => {
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
@@ -116,8 +149,8 @@ export const functionGetMeasurementFrequency = functions.https.onRequest((reques
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
         .collection(PLANTS_COLLECTION).doc(request.body.plantId).get()
         .then(function(doc) {
-            const measureFrequency: number = doc.get('measureFrequency') * 1000;
-            response.send({measureFrequency: measureFrequency});
+            const measureFrequency: string = (doc.get('measureFrequency') * 1000).toString();
+            response.send(measureFrequency);
         })
         .catch(function(error) {
             response.send("Error getting measure frequency: " + error);
