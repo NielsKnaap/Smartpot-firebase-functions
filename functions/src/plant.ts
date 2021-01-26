@@ -47,6 +47,9 @@ function addPlant( data:any ){
 
 export const functionEditPlant = functions.https.onRequest((request, response) => {
     var data = {
+        userId: request.body.userId,
+        plantId: request.body.plantId,
+
         minLightIntensity: request.body.minLightIntensity,
         maxLightIntensity: request.body.maxLightIntensity,
 
