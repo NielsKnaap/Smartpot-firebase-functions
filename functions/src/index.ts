@@ -20,10 +20,13 @@ export const functionGetUserIdByPlantId = user.functionGetUserIdByPlantId;
 export const functionAddPlant = plant.functionAddPlant;
 export const callableAddPlant = plant.callableAddPlant;
 export const functionEditPlant = plant.functionEditPlant;
+export const callableEditPlant = plant.callableEditPlant;
 export const functionDeletePlant = plant.functionDeletePlant;
+export const callableGetPlant = plant.callableGetPlant;
 export const functionGetPlant = plant.functionGetPlant;
 export const callableGetPlants = plant.callableGetPlants;
 export const functionGetPlants = plant.functionGetPlants;
+export const functionGetMeasurementFrequency = plant.functionGetMeasurementFrequency;
 
 export const functionAddMeasurement = measurement.functionAddMeasurement;
 export const functionGetMeasurement = measurement.functionGetMeasurement;
