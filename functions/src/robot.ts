@@ -1,12 +1,39 @@
 import * as functions from "firebase-functions";
 import {FIRESTORE, PLANTS_COLLECTION, USERS_COLLECTION} from "./index";
 
+export const callableGetMoveRobot = functions.https.onCall((data, context) => {
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId).get()
+        .then(doc => {
+            return doc.get('moveRobot');
+        })
+        .catch(function (error) {
+            return {
+                error: "Het ophalen van moveRobot is mislukt"
+            };
+        });
+})
+
+function editMoveRobot( data: any ){
+    return FIRESTORE.collection(USERS_COLLECTION).doc(data.userId).collection(PLANTS_COLLECTION).doc(data.plantId).update({
+
+        moveRobot: data.moveRobot
+    });
+}
+
+export const callableEditMoveRobot = functions.https.onCall((data, context) => {
+    editMoveRobot(data).then(function (updatedMoveRobot) {
+        return 'Successfully updated moveRobot';
+    }).catch(function (error) {
+        return 'Error while updating moveRobot: ' + error;
+    });
+});
+
 export const functionMoveRobot = functions.https.onRequest((request, response ) => {
 
     var httprequest = require('request');
 
     // @ts-ignore
-    httprequest('https://api.openweathermap.org/data/2.5/weather?q=bergschenhoek&appid=771d36198df4b0d19287d7d72999386e', function (httperror, httpresponse, body) {
+    httprequest('https://api.openweathermap.org/data/2.5/weather?q=leiden&appid=771d36198df4b0d19287d7d72999386e', function (httperror, httpresponse, body) {
         if (!httperror && httpresponse.statusCode == 200) {
             //Parse json
             const obj = JSON.parse(body)
@@ -19,7 +46,7 @@ export const functionMoveRobot = functions.https.onRequest((request, response ) 
 
             var currenttime = new Date();
 
-            if(currenttime > dateSunrise && currenttime < dateSunset){
+            if(currenttime > dateSunrise && currenttime < dateSunset) {
                 // Time to move
                 FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId)
                     .collection(PLANTS_COLLECTION).doc(request.body.plantId).get()
@@ -33,11 +60,16 @@ export const functionMoveRobot = functions.https.onRequest((request, response ) 
                         const maxTemperature = doc.get('maxTemperature');
                         const temperature = request.body.temperature;
 
-                        const needToMove = calculateMeasurement(
-                            minLightIntensity, lightIntensity, maxLightIntensity,
-                            minTemperature, temperature, maxTemperature);
+                        let moveRobot = doc.get('moveRobot');
 
-                        response.send(needToMove);
+                        if (moveRobot == true) {
+                            moveRobot = calculateMeasurement(
+                                minLightIntensity, lightIntensity, maxLightIntensity,
+                                minTemperature, temperature, maxTemperature);
+                        } else {
+                            moveRobot = false;
+                        }
+                        response.send(moveRobot);
 
                     })
                     .catch(function(error) {
@@ -46,6 +78,8 @@ export const functionMoveRobot = functions.https.onRequest((request, response ) 
             } else {
                 response.send(false);
             }
+        } else {
+            response.send(false);
         }
     })
 });
