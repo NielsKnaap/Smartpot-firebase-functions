@@ -41,7 +41,8 @@ function addPlant( data:any ){
         minTemperature: data.minTemperature,
         maxTemperature: data.maxTemperature,
 
-        measureFrequency: data.measureFrequency
+        measureFrequency: data.measureFrequency,
+        moveRobot: true
     });
 }
 
@@ -89,8 +90,8 @@ export const callableEditPlant = functions.https.onCall((data, context) => {
         return 'Successfully updated plant';
     }).catch(function (error) {
         return 'Error while updating plant: ' + error;
-    })
-})
+    });
+});
 
 export const functionDeletePlant = functions.https.onRequest((request, response) => {
     FIRESTORE.collection(USERS_COLLECTION).doc(request.body.userId).collection(PLANTS_COLLECTION).doc(request.body.id).delete()

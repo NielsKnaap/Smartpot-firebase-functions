@@ -35,3 +35,5 @@ export const callableGetLastMeasurement = measurement.callableGetLastMeasurement
 export const sendNotificationToUser = measurement.sendNotificationToUser;
 
 export const functionMoveRobot = robot.functionMoveRobot;
+export const callableGetMoveRobot = robot.callableGetMoveRobot;
+export const callableEditMoveRobot = robot.callableEditMoveRobot;
